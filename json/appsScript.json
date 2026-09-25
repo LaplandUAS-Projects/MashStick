@@ -1,0 +1,25 @@
+function doPost(e) {
+  // add data to history sheet
+  var historySheet = SpreadsheetApp.getActiveSpreadsheet().getSheetByName("Data");
+  var data = JSON.parse(e.postData.contents);
+  historySheet.appendRow([
+    new Date(),
+    data.temperature,
+    data.soil_kpa,
+    data.mcu_temperature
+  ]);
+
+  // add data to dashboard sheet
+  var latestSheet = SpreadsheetApp.getActiveSpreadsheet().getSheetByName("Latest");
+  latestSheet.getRange(2, 1, latestSheet.getLastRow() - 1, latestSheet.getLastColumn()).clearContent();
+  latestSheet.appendRow([
+    new Date(),
+    data.temperature,
+    data.soil_kpa,
+    data.battery,
+    data.mcu_temperature
+  ]);
+
+  return ContentService.createTextOutput("OK");
+}
+
